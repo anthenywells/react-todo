@@ -1,34 +1,45 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
-import "./App.css";
-import { increment } from "./actions";
 
-const mapStateToProps = state => ({
-  count: state.count
-});
+import Todos from './Todos'
+import AddTodo from './AddTodo'
+
+
 
 class App extends Component {
-  testAction = payload => {
-    this.props.dispatch(increment(payload));
-  };
+  state = {
+    todos: [
+      {id:1, content: "buy milk"},
+      {id:2, content: "haircut"}
+    ]
+  }
+
+  deleteTodo = (id) => {
+    // console.log(id);
+    const todos = this.state.todos.filter(todo => {
+      return todo.id !== id
+    });
+    this.setState({
+      todos
+    })
+  }
+
+  addTodo = (todo) => {
+    todo.id = Math.random();
+    let todos = [...this.state.todos, todo]
+    this.setState({
+      todos: todos
+    })
+  }
 
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <h1>Counter</h1>
-        </header>
-
-        <pre>Counter: {this.props.count}</pre>
-
-        <button onClick={() => this.testAction(1)}>+</button>
-
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+      <div className="todo-app container">
+        <h1 className="center blue-text">Todos</h1>
+        <AddTodo addTodo={this.addTodo} />
+        <Todos todos={this.state.todos} deleteTodo={this.deleteTodo}/>
       </div>
     );
   }
 }
 
-export default connect(mapStateToProps)(App);
+export default App;
